@@ -1,5 +1,6 @@
 class Piece {
     constructor(ctx) {
+    this.spawn();
     this.ctx = ctx;
     this.color = 'blue';
     this.snape = [
@@ -26,5 +27,20 @@ class Piece {
     move(p) {
         this.x = p.x;
         this.y = p.y;
+    }
+
+    randomizeTetrominoType(noOfTypes) {
+        return Math.floor(Math.random() * noOfTypes);
+    }
+
+    spawn() {
+        this.typeId = this.randomizeTetrominoType(COLORS.length - 1);
+        this.shape = SHAPES[this.typeId];
+        this.color = COLORS[this,typeId];
+        this.x = 0;
+        this.y = 0;
+    }
+    setStartPosition() {
+        this.x = this.typeId === 4 ? 4 : 3;
     }
 }
