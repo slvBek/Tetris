@@ -4,6 +4,14 @@ class Board {
         this.ctxNext = ctxNext;
         this.piece = null;
         this.next = null;
+        this.init();
+    }
+
+    init() {
+        this.ctx.canvas.width = COLS * BLOCK_SIZE;
+        this.ctx.canvas.height = ROWS * BLOCK_SIZE;
+
+        this.ctx.scale(BLOCK_SIZE, BLOCK_SIZE);
     }
 
     reset() {
@@ -24,14 +32,73 @@ class Board {
         this.next.draw();
     }
 
+    draw() {
+        this.piece.draw();
+        this.drawBoard();
+    }
+
+    drop() {
+        let p = moves[KEY.DOWN](this.piece);
+        if(this.valid(p)) {
+            this.piece.move(p);
+        } else {
+            this.freeze();
+            this.clearLines();
+            if(this.piece.y === 0) {
+                return false;
+            }
+            this.piece = this.next;
+            this.piece.ctx = this.ctx;
+            this.getNewPiece();
+            this.piece.setStartPosition();
+        }
+        return true;
+    }
+    clearLines() {
+        let lines = 0;
+        
+        this.grid.forEach((row, y) => {
+
+            if(row.every(value => value > 0)) {
+                lines++;
+                this.grid.splice(y, 1);
+
+                this.grid.unshift(Array(COLS).fill(0));
+            }
+        });    
+        
+        if (lines > 0) {
+            account.score += this.getLineClearPoints(lines);
+            account.lines += lines;
+
+            if (account.liones >= LINES_PER_LEVEL) {
+                account.level++;
+                account.lines -= LINES_PER_LEVEL;
+                time.level = LEVEL[account.level];
+            }
+        }
+    }
+
+    valid(p) {
+        return p.shape.every((row, dy) => {
+        return row.every((value, dx) => {
+            let x = p.x + dx;
+            let y = p.y + dy;
+            return (value === 0 ||
+                (this.insideWalls(x) && this.aboveFloor(y) && this.notOccupied(x, y))
+                );
+            });
+        });
+            
+    }
+                    
+                
     getEmptyBoard() {
         return Array.from(
             {length: ROWS}, () => Array(COLS).fill(0)
         );
     }
-    valid(p) {
-        return true;
-    }
+    
 
     insideWalls(x) {
         return x >= 0 && x < COLS;
@@ -45,17 +112,7 @@ class Board {
         return this.grid[y] && this.grid[y][x] === 0;
     }
 
-    valid(p) {
-        return p.shape.every((row, dy) => {
-            return row.every((value, dx) => {
-                let x = p.x + dx;
-                let y = p.y + dy;
-                return value === 0 ||
-                (this.insideWalls(x) && this.aboveFloor(y) && this.notOccupied(x, y));
-            });
-        });
-        
-    }
+    
     // if(this.valid(p)) {
     //     this.piece.move(p);
     // }
@@ -73,10 +130,7 @@ class Board {
         return clone;
     }
 
-    draw() {
-        this.piece.draw();
-        this.drawBoard();
-    }
+    
 
     drawBoard() {
         this.grid.forEach((row, y) => {
@@ -89,25 +143,7 @@ class Board {
         });
     }
 
-    drop() {
-        let p = moves[KEY.DOWN](this.piece);
-        if(this.valid(p)) {
-            this.piece.move(p);
-        } else {
-            this.freeze();
-            this.clearLines();
-            console.table(this.grid);
-
-            if(this.piece.y === 0) {
-                return false;
-            }
-            this.piece = this.next;
-            this.piece.ctx = this.ctx;
-            this.piece = getNewPiece();
-            this.piece.setStartPosition();
-        }
-        return true;
-    }
+    
 
     freeze() {
         this.piece.shape.forEach((row, y) => {
@@ -119,22 +155,7 @@ class Board {
         });
     }
 
-    clearLines() {
-        let lines = 0;
-        if(lines > 0) {
-            account.score += this.getLineClearPoints(lines);
-        }
-        this.grid.forEach((row, y) => {
-            if(row.every(value => value > 0)) {
-                lines++;
-
-
-;.levelaccountacco[]EVELL = .leveltimeTI                ;LINES_PER_LEVEL                this.grid.splice(y, 1);
-
-                this.grid.unshift(Array(COLS).fill(0));
-            }
-        });
-    }
+    
 
     getLineClearPoints(lines) {
         return lines === 1 ? POINTS.SINGLE :
