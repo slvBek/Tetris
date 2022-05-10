@@ -92,10 +92,30 @@ class Board {
             
     }
                     
-                
-    getEmptyBoard() {
+    freeze() {
+        this.piece.shape.forEach((row, y) => {
+            row.forEach((value, x) => {
+                if(value > 0) {
+                    this.grid[y + this.piece.y][x + this.piece.x] = value;
+                }
+            });
+        });
+    } 
+
+    drawBoard() {
+        this.grid.forEach((row, y) => {
+            row.forEach((value, x) => {
+                if(value > 0) {
+                    this.ctx.fillStyle = COLORS[value];
+                    this.ctx.fillRect(x, y, 1, 1);
+                }
+            });
+        });
+    }
+
+    getEmptyGrid() {
         return Array.from(
-            {length: ROWS}, () => Array(COLS).fill(0)
+            { length: ROWS }, () => Array(COLS).fill(0)
         );
     }
     
@@ -112,57 +132,32 @@ class Board {
         return this.grid[y] && this.grid[y][x] === 0;
     }
 
-    
-    // if(this.valid(p)) {
-    //     this.piece.move(p);
-    // }
-    
-    // for (let y = 0; y < p.shape.length; ++y) {
-    //     for (let x = 0; x < y; ++x) {
-    //         [p.shape[x][y], p.shape[y][x]] =
-    //         [p.shape[y][x], p.shape[x][y]];
-    //     }
-    // }
-    // p.shape.forEach(row => row.reverse());
+    rotate(piece) {
+        let p = JSON.parse(JSON.stringify(piece));
 
-    rotate(p) {
-        let clone = JSON.parse(JSON.stringify(p));
-        return clone;
+        for (let y = 0; y < p.shape.length; ++y) {
+            for (let x = 0; x < y; ++x) {
+                [p.shape[x][y], p.shape[y][x]] =
+                [p.shape[y][x], p.shape[x][y]];
+            }
+        }
+        p.shape.forEach(row => row.reverse());
+        return p;
     }
 
-    
+    getLineClearPoints(lines, level) {
+        const lineClearPoints =
+        lines === 1
+          ? POINTS.SINGLE 
+          : lines === 2 
+          ? POINTS.DOUBLE 
+          : lines === 3 
+          ? POINTS.TRIPLE 
+          : lines === 4 
+          ? POINTS.TETRIS 
+          : 0;
 
-    drawBoard() {
-        this.grid.forEach((row, y) => {
-            row.forEach((value, x) => {
-                if(value > 0) {
-                    this.ctx.fillStyle = COLORS[value];
-                    this.ctx.fillRect(x, y, 1, 1);
-                }
-            });
-        });
-    }
-
-    
-
-    freeze() {
-        this.piece.shape.forEach((row, y) => {
-            row.forEach((value, x) => {
-                if(value > 0) {
-                    this.grid[y + this.piece.y][x + this.piece.x] = value;
-                }
-            });
-        });
-    }
-
-    
-
-    getLineClearPoints(lines) {
-        return lines === 1 ? POINTS.SINGLE :
-               lines === 2 ? POINTS.DOUBLE :
-               lines === 3 ? POINTS.TRIPLE :
-               lines === 4 ? POINTS.TETRIS :
-               0;
+          return (account.level + 1) * lineClearPoints;
     }
 
 }
