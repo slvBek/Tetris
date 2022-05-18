@@ -1,30 +1,20 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>JavaScript Tetris</title>
-        <link href="https://fonts.googleapis.com/css?family=Press+Start+2P" rel="stylesheet">
-        <link rel="stylesheet" type="text/css" href="styles.css">
-    </head>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>JavaScript Tetris</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Press+Start+2P">
+    <link rel="stylesheet" href="./index.css">
+</head>
 <body>
-    <div class="grid">
-        <canvas id="board" class="game-board"></canvas>
-        <div class="right-column">
-            <div>
-                <h1>TETRIS</h1>
-                <p>Score: <span id="score">0</span></p>
-                <p>Lines: <span id="lines">0</span></p>
-                <p>Level: <span id="level">0</span></p>
-                <canvas id="next" class="next"></canvas>
-            </div>
-            <button onclick="play()" class="play-button">Play</button>
-        </div>
+    <div id="root">
+        <h1>
+            <span style="color: red">T</span><span style="color: orange">E</span><span style="color: yellow">T</span><span style="color: green">R</span><span style="color: cyan">I</span><span style="color: purple">S</span>
+        </h1>
     </div>
 
-    <script type="text/javascript" src="constants.js"></script>
-    <script type="text/javascript" src="board.js"></script>
-    <script type="text/javascript" src="piece.js"></script>
-    <script type="text/javascript" src="main.js"></script>
+    <script src="./index.js" type="module"></script>
 </body>
 </html>
