@@ -90,6 +90,7 @@ export default class Controller {
                 this.stopTimer();
                 this.game.movePieceDown();
                 this.updateView();
+                this.game.score += 1;
                 break;
         }    
     }
