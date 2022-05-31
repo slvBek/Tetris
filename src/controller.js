@@ -37,6 +37,7 @@ export default class Controller {
 
         if (state.isGameOver) {
             this.view.renderEndScreen(state);
+            this.game.score = score;
         } else if (!this.isPlaying) {
             this.view.renderPauseScreen();
         } else {
